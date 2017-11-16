@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html ng-app="MainModule">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css?family=Noto+Sans|Dosis" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.js"></script>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="../asserts/transportIcon.png" />
+</head>
+
+<title>Cards | Public Transport</title>
+
+
+<body ng-controller="MainController">
+    <div class="container">
+
+
+        <div>
+
+            <div class=" page-header">
+
+                <div class=" heading ">
+                    <div class="image1">
+                        <span>Insert Your Card</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="container-fluid col-md-12 col-sm-12 body">
+
+
+                <div class="body">
+                    <div class="row col-md-12 ">
+
+                        <div class="cardInsert">
+
+                            <div class="cardInsert_body" ng-click="getData()">
+                                <img src="../asserts/swapCard.png">
+                            </div>
+                            <div class="cardInsert_fotter">
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row col-md-12">
+
+                        <div class="cardDetails form-group">
+
+                            <div class="row   ">
+                                <div ng-show="process">
+                                    <div class="name">Reading Card Details...</div>
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-striped active" id="myBar"></div>
+                                    </div>
+                                </div>
+
+                                <div class="info">(Swap the card to card reader in order to do transactions)</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+    </div>
+</body>
+
+<script>
+    angular.module("MainModule", []).controller("MainController", function ($scope) {
+
+        $scope.process=false;
+
+
+
+        $scope.getData = function () {
+            $scope.process=true;
+            var elem = document.getElementById("myBar");
+            var width = 0;
+            var id = setInterval(frame, 70);
+            function frame() {
+                if (width == 100) {
+                    clearInterval(id);
+                } else {
+                    width++;
+                    elem.style.width = width + '%';
+                }
+            }
+
+
+        }
+
+
+    });
+
+</script>
+<style>
+    .col-md-12 {
+        text-align: center;
+    }
+
+    .heading {
+        font-family: 'Noto Sans', sans-serif;
+        font-size: 4.5vh;
+    }
+
+    .name {
+        font-family: 'Dosis', sans-serif;
+        font-size: 5vh;
+    }
+
+    /* .cardInsert_body {
+        margin-left: 25%;
+    }
+
+    .cardDetails {
+        padding-top: 25%;
+        margin-left: 5%;
+    } */
+
+    .info {
+        font-family: 'Dosis', sans-serif;
+        font-style: italic;
+    }
+</style>
+
+</html>

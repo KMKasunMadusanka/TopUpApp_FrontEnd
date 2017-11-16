@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html ng-app="MainModule">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css?family=Noto+Sans|Dosis" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dynatable/0.3.1/jquery.dynatable.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.js"></script>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href="../asserts/transportIcon.png" />
+</head>
+
+<title>TopUp | Public Transport</title>
+
+
+<body ng-controller="MainController">
+    <div class="container  col-md-12">
+
+
+        <div class="col-md-12 col-sm-12 ">
+
+            <div class="col-md-12 col-sm-12 page-header">
+
+
+                <div class="col-md-12 systemSection">
+                    <div class="imageIcon ">
+                        <span class="heading pull-right">Automate Public Transport</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="container-fluid col-md-12 col-sm-12 body">
+
+                <div class="row col-md-12 col-sm-12 well well-sm">
+                    <div class="col-md-1 userSection ">
+                        <div class="image1">
+                            <img src="../asserts/user.png" class="pull-left">
+                        </div>
+                    </div>
+                    <h4 class="col-md-9 welcomeText">welcome user</h4>
+                </div>
+
+                <div class="row col-md-6 col-sm-6 details">
+                    <div class="form-group Option" ng-show="!reload && !cashPay && !cashPayConf && !cardPay">
+
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-4 col-form-label">Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly class="form-control" id="Passengername" value="K.M.Kasun.Madusanka">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-4 col-form-label">Passenger Id</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly class="form-control" id="Passengerid" value="74837647386483">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-4 col-form-label">Available balance</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly class="form-control" id="availabaleBalance" value="6798.00LKR">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-4 col-form-label">Expier Date</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly class="form-control" id="expierDate" value="12/2/2017">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-4 col-form-label">Card Type</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly class="form-control" id="cardType" value="Gold Category">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-control Option" ng-show="reload">
+                        <div class="ops_header col-md-12">
+                            <div class=" msg">
+                                <span>Which method Do you prefer to do the Roload?</span>
+                            </div>
+                        </div>
+                        <div class="ops_body col-md-12">
+                            <button type="button" class="btn-default btn-lg  confButton1" ng-click="docashPayment()">Cash</button>
+                            <button type="button" class="btn-default btn-lg confButton2" ng-click="docardPayment()">Cards</button>
+                        </div>
+                    </div>
+
+                    <div class="form-control Option" ng-show="cashPay">
+                        <div class="ops_header col-md-12">
+                            <div class="msg">
+                                <span>Please Enter money to money box.</span>
+                            </div>
+                        </div>
+                        <div class="ops_body_pay col-md-12">
+
+                            <button type="button" class="btn-default btn-lg payButton" ng-click="pay()">Pay</button>
+                        </div>
+                    </div>
+
+                    <div class="form-control Option" ng-show="cashPayConf">
+                        <div class="ops_header col-md-12">
+                            <div class="cashMsg">
+                                <div class="cashMsg_line1">You have Entered,</div>
+                                <div class="cashMsg_content">{{moneyAmount}}.00 LKR</div>
+                                <div class="cashMsg_content">Do you need to reload this amount?</div>
+                            </div>
+                        </div>
+                        <div class="ops_body_cashConf col-md-12">
+                            <button type="button" class="btn-default btn-lg  confButton1" ng-click="transactionCompleate()">Yes</button>
+                            <button type="button" class="btn-default btn-lg confButton2" ng-click="backtoHome()">No</button>
+                        </div>
+                    </div>
+
+                    <div class="form-control Option" ng-show="cardPay">
+                        <div class=" col-md-12">
+                            <div class="form-row">
+                                <div class="form-group col-md-8">
+                                    <label>Enter Amount</label>
+                                    <input type="number" class="form-control" id="moneyAmount" ng-model="moneyAmount" placeholder="RS.00.00">
+                                    <small class="form-text text-muted">Enter amount in multipliers of 10</small>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label>Card Number</label>
+                                    <input type="number" class="form-control" ng-model="cardNumber" id="cardNumber" placeholder="XXXX-XXXX-XXXX-XXXX">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Card Type</label>
+                                    <select id="cardtype" class="form-control">
+                                        <option selected>Visa Card</option>
+                                        <option>Credit Card</option>
+                                        <option>Debit Card</option>
+                                    </select>
+                                </div>
+                                <div class="form-group  col-md-2">
+                                    <label>CCV/CVC</label>
+                                    <input type="number" class="form-control" id="ccv_cvc" ng-model="ccv_cvc">
+                                    <small class="form-text text-muted">3 digits</small>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="ops_body_cardConf col-md-12">
+                            <button type="button" class="btn-default btn-lg  confButton1" ng-click="pay()">Proceed Payment</button>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="row col-md-6 col-sm-6 buttonGroup">
+
+                    <div class="buttonGroupContainer well well-sm">
+                        <div class="btn-group demoPadder " role="group" aria-label="Basic example">
+                            <button type="button" class="btn-lg btn-default bigButton" ng-click="backtoHome()">Home</button>
+                            <button type="button" class="btn-lg btn-default bigButton" ng-disabled="!showRload" ng-click="changeButtonStatus()">Reload</button>
+                            <button type="button" class="btn-lg btn-default bigButton" ng-click="backtoHome()">Exit</button>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+
+
+    </div>
+</body>
+
+<script>
+    angular.module("MainModule", []).controller("MainController", function ($scope) {
+
+        $scope.moneyAmount = 500;
+
+        $scope.showRload = true;
+        $scope.reload = false;
+        $scope.cashPay = false;
+        $scope.cashPayConf = false;
+        $scope.cardPay = false;
+        $scope.value = 0;
+
+        var specialAccess = false;
+
+        $scope.changeButtonStatus = function () {
+            $scope.showRload = false;
+            $scope.reload = true;
+        }
+
+        $scope.backtoHome = function () {
+
+            if (specialAccess) {
+                $scope.showRload = true;
+                $scope.reload = false;
+                $scope.cashPay = false;
+                $scope.cashPayConf = false;
+                $scope.cardPay = false;
+            }
+
+            else if ($scope.reload || $scope.cashPay || $scope.cashPayConf || $scope.cardPay) {
+                // swal({
+                //     title: "Are you sure?",
+                //     text: "Do you need to terminate transaction",
+                //     type: "warning",
+                //     showCancelButton: true,
+                //     confirmButtonColor: "#DD6B55",
+                //     confirmButtonText: "Yes",
+                //     closeOnConfirm: false
+                // }, function (isConfirm) {
+                //     if (isConfirm) {
+                //         $scope.showRload = true;
+                //         $scope.reload = false;
+                //         $scope.cashPay = false;
+                //         $scope.cashPayConf = false;
+                //         $scope.cardPay = false;
+                //     };
+                // });
+                var back = confirm("Do you want to cancel transaction");
+                if (back) {
+
+                    $scope.showRload = true;
+                    $scope.reload = false;
+                    $scope.cashPay = false;
+                    $scope.cashPayConf = false;
+                    $scope.cardPay = false;
+
+                }
+            }
+        }
+
+
+        $scope.docashPayment = function () {
+
+            $scope.reload = false;
+            $scope.cashPay = true;
+
+        }
+
+        $scope.docardPayment = function () {
+            $scope.reload = false;
+            $scope.cardPay = true;
+        }
+
+        $scope.pay = function () {
+            $scope.cardPay = false;
+            $scope.cashPay = false;
+            $scope.cashPayConf = true;
+        }
+
+        $scope.transactionCompleate = function () {
+
+            var text = 'Current Account Balance Is ' + $scope.moneyAmount + '.00 LKR';
+            swal({
+                type: 'success',
+                title: "Transcation Compleate",
+                text: text,
+                timer: 3000,
+                showConfirmButton: false
+            });
+            specialAccess = true;
+            $scope.backtoHome();
+        }
+
+
+    });
+
+</script>
+<style>
+    .heading {
+        font-family: 'Noto Sans', sans-serif;
+        font-size: 4.5vh;
+    }
+
+    .demoPadder {
+        padding-left: 7%;
+        width: 87%;
+        font-size: 9vh;
+
+    }
+
+    .buttonGroupContainer {
+        padding-left: 11%;
+        width: 100%;
+        height: 37vh;
+    }
+
+    /* .body {
+        height: 100%;
+    } */
+
+    .form-control,
+    .col-form-label {
+        font-family: 'Noto Sans', sans-serif;
+        font-size: 2.5vh;
+    }
+
+    /* .details {
+
+        height: 56vh;
+    } */
+
+    .bigButton {
+        width: 30%;
+        padding: 20% 5%;
+        font-family: 'Dosis', sans-serif;
+        font-size: 5vh;
+    }
+
+    .Option {
+        margin-top: 5.5%;
+        height: 37vh;
+    }
+
+    .msg {
+        text-align: center;
+        height: 15vh;
+        margin-top: 6vh;
+        font-family: 'Dosis', sans-serif;
+        font-size: 5vh;
+    }
+
+    .cashMsg {
+        height: 15vh;
+        margin-top: 6vh;
+        font-family: 'Dosis', sans-serif;
+        font-size: 5vh;
+    }
+
+    .cashMsg_content {
+        text-align: center;
+    }
+
+    .cashMsg_line1 {
+        margin-left: 8%;
+    }
+
+    .reloadOps {
+        font-family: 'Dosis', sans-serif;
+        font-size: 3vh;
+    }
+
+    .passegerDetails {
+        font-family: 'Dosis', sans-serif;
+        font-size: 3vh;
+    }
+
+    .buttonGroup {
+        margin-top: 2.5%;
+        margin-left: 2%;
+    }
+
+    .welcomeText {
+        font-size: 6vh;
+    }
+
+
+    .ops_body {
+        margin-top: 5%;
+        margin-left: 22%;
+    }
+
+    .ops_body_cashConf {
+        margin-top: 10%;
+        margin-left: 22%;
+    }
+
+    .ops_body_cardConf {
+        margin-top: -4%;
+        margin-left: 3%;
+    }
+
+    .ops_body_pay {
+        margin-top: 5%;
+        text-align: center;
+    }
+
+    .confButton2 {
+        margin-left: 26%;
+    }
+
+    .ops_header {
+        margin-top: -7%;
+    }
+</style>
+
+</html>
