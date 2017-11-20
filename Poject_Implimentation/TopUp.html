@@ -54,7 +54,7 @@
                             <img src="../asserts/user.png" class="pull-left">
                         </div>
                     </div>
-                    <h4 class="col-md-9 welcomeText">welcome user</h4>
+                    <h4 class="col-md-9 welcomeText">welcome User</h4>
                 </div>
 
                 <div class="row col-md-6 col-sm-6 details">
@@ -63,35 +63,36 @@
                         <div class="form-group row">
                             <label for="staticEmail" class="col-sm-4 col-form-label">Name</label>
                             <div class="col-sm-8">
-                                <input type="text" readonly class="form-control" id="Passengername" value="K.M.Kasun.Madusanka">
+                                <input type="text" readonly class="form-control" id="Passengername" value="{{loadedPassenger.name}}">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="staticEmail" class="col-sm-4 col-form-label">Passenger Id</label>
                             <div class="col-sm-8">
-                                <input type="text" readonly class="form-control" id="Passengerid" value="74837647386483">
+                                <input type="text" readonly class="form-control" id="Passengerid" value="{{loadedPassenger.passenger_id}}">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="staticEmail" class="col-sm-4 col-form-label">Available balance</label>
                             <div class="col-sm-8">
-                                <input type="text" readonly class="form-control" id="availabaleBalance" value="6798.00LKR">
+                                <input type="text" readonly class="form-control" id="availabaleBalance" value="{{loadedCard.balance}}LKR">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="staticEmail" class="col-sm-4 col-form-label">Expier Date</label>
                             <div class="col-sm-8">
-                                <input type="text" readonly class="form-control" id="expierDate" value="12/2/2017">
+                                <input type="text" readonly class="form-control" id="expierDate" value="{{loadedCard.expiry_date}}">
+                               
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="staticEmail" class="col-sm-4 col-form-label">Card Type</label>
                             <div class="col-sm-8">
-                                <input type="text" readonly class="form-control" id="cardType" value="Gold Category">
+                                <input type="text" readonly class="form-control" id="cardType" value="{{loadedCard.type}}">
                             </div>
                         </div>
 
@@ -110,8 +111,13 @@
 
                     <div class="form-control Option" ng-show="cashPay">
                         <div class="ops_header col-md-12">
-                            <div class="msg">
-                                <span>Please Enter money to money box.</span>
+                            <div>
+                                <div class="msg_getmoney">Please Enter money to money box.</div>
+                                <div >
+                                    <label>Amount</label>
+                                    <input type="number" class="form-control" id="enterdAmount" ng-model="enterdAmount" placeholder="RS.00.00" >
+                                    
+                                </div>
                             </div>
                         </div>
                         <div class="ops_body_pay col-md-12">
@@ -124,13 +130,13 @@
                         <div class="ops_header col-md-12">
                             <div class="cashMsg">
                                 <div class="cashMsg_line1">You have Entered,</div>
-                                <div class="cashMsg_content">{{moneyAmount}}.00 LKR</div>
+                                <div class="cashMsg_content">{{totalmoney}}.00 LKR</div>
                                 <div class="cashMsg_content">Do you need to reload this amount?</div>
                             </div>
                         </div>
                         <div class="ops_body_cashConf col-md-12">
                             <button type="button" class="btn-default btn-lg  confButton1" ng-click="transactionCompleate()">Yes</button>
-                            <button type="button" class="btn-default btn-lg confButton2" ng-click="backtoHome()">No</button>
+                            <button type="button" class="btn-default btn-lg confButton2" ng-click="callBackTomoneyLoad()">No</button>
                         </div>
                     </div>
 
@@ -198,18 +204,51 @@
 </body>
 
 <script>
-    angular.module("MainModule", []).controller("MainController", function ($scope) {
+    angular.module("MainModule", []).controller("MainController", function ($scope, $http,$filter) {
+        $scope.cardNumber = '5755757';
+        $scope.baseUrl = 'http://localhost:9000/';
 
         $scope.moneyAmount = 500;
 
+        $scope.totalmoney=0;
         $scope.showRload = true;
         $scope.reload = false;
         $scope.cashPay = false;
         $scope.cashPayConf = false;
         $scope.cardPay = false;
         $scope.value = 0;
-
+        $scope.loadedPassenger;
+        $scope.loadedCard;
         var specialAccess = false;
+
+        //load card data
+        $http.get($scope.baseUrl + 'cards/').then(function (cardsResult) {
+            //load passenger data
+            $http.get($scope.baseUrl + 'passengers/').then(function (passengerResult) {
+                console.log(passengerResult.data.content);
+                console.log(cardsResult.data.content);
+                var passeger;
+                var card;
+                for (passeger in passengerResult.data.content) {
+                    if (passengerResult.data.content[passeger].card_number ==$scope.cardNumber) {
+                        $scope.loadedPassenger = passengerResult.data.content[passeger];
+                        break;
+                    }
+                }
+                for (card in cardsResult.data.content) {
+                    if (cardsResult.data.content[card].card_number ==$scope.cardNumber) {
+                        $scope.loadedCard = cardsResult.data.content[card];
+                        $scope.loadedCard.expiry_date = $filter('date')($scope.loadedCard.expiry_date, "yyyy/MM/dd");
+                        break;
+                    }
+                }
+                console.log("Current Passenger Is:");
+                console.log($scope.loadedPassenger);
+                console.log("Current card Is:");
+                console.log($scope.loadedCard);
+            });
+        });
+
 
         $scope.changeButtonStatus = function () {
             $scope.showRload = false;
@@ -271,9 +310,11 @@
         }
 
         $scope.pay = function () {
+            $scope.totalmoney = $scope.totalmoney+ $scope.enterdAmount;
             $scope.cardPay = false;
             $scope.cashPay = false;
             $scope.cashPayConf = true;
+            $scope.enterdAmount=0;
         }
 
         $scope.transactionCompleate = function () {
@@ -288,6 +329,11 @@
             });
             specialAccess = true;
             $scope.backtoHome();
+        }
+
+        $scope.callBackTomoneyLoad = function(){
+            $scope.cashPayConf = false;
+            $scope.cashPay = true;
         }
 
 
@@ -343,6 +389,14 @@
     .msg {
         text-align: center;
         height: 15vh;
+        margin-top: 6vh;
+        font-family: 'Dosis', sans-serif;
+        font-size: 5vh;
+    }
+
+    .msg_getmoney{
+        text-align: center;
+        height: 10vh;
         margin-top: 6vh;
         font-family: 'Dosis', sans-serif;
         font-size: 5vh;
