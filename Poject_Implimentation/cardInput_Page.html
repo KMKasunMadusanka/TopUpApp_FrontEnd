@@ -94,7 +94,7 @@
 </body>
 
 <script>
-    angular.module("MainModule", []).controller("MainController", function ($scope) {
+    angular.module("MainModule", []).controller("MainController", function ($scope,$window) {
 
         $scope.process=false;
 
@@ -108,6 +108,7 @@
             function frame() {
                 if (width == 100) {
                     clearInterval(id);
+                    $window.location.href = 'file:///C:/Users/Kasun/Documents/CSSE2/CSSE-2/TopUpApp/Poject_Implimentation/TopUp.html';
                 } else {
                     width++;
                     elem.style.width = width + '%';
