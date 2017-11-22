@@ -139,7 +139,7 @@
                     </div>
 
                     <div class="form-control Option" ng-show="cardPay">
-                        <div class=" col-md-12">
+                        <div class=" col-md-12  card_body ">
                             <div class="form-row">
                                 <div class="form-group col-md-8">
                                     <label>Enter Amount</label>
@@ -271,33 +271,36 @@
             }
 
             else if ($scope.reload || $scope.cashPay || $scope.cashPayConf || $scope.cardPay) {
-                // swal({
-                //     title: "Are you sure?",
-                //     text: "Do you need to terminate transaction",
-                //     type: "warning",
-                //     showCancelButton: true,
-                //     confirmButtonColor: "#DD6B55",
-                //     confirmButtonText: "Yes",
-                //     closeOnConfirm: false
-                // }, function (isConfirm) {
-                //     if (isConfirm) {
-                //         $scope.showRload = true;
-                //         $scope.reload = false;
-                //         $scope.cashPay = false;
-                //         $scope.cashPayConf = false;
-                //         $scope.cardPay = false;
-                //     };
-                // });
-                var back = confirm("Do you want to cancel transaction");
-                if (back) {
+                swal({
+                    title: "Transaction in process",
+                    text: "Do you need to terminate the transaction.",
+                    type: "info",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true
+                }, function () {
+                    setTimeout(function () {
+                        swal("Transaction Terminated");
+                        $scope.$apply(function () {
+                            $scope.showRload = true;
+                            $scope.reload = false;
+                            $scope.cashPay = false;
+                            $scope.cashPayConf = false;
+                            $scope.cardPay = false;
+                        });
 
-                    $scope.showRload = true;
-                    $scope.reload = false;
-                    $scope.cashPay = false;
-                    $scope.cashPayConf = false;
-                    $scope.cardPay = false;
+                    }, 1500);
+                });
+                // var back = confirm("Do you want to cancel transaction");
+                // if (back) {
 
-                }
+                //     $scope.showRload = true;
+                //     $scope.reload = false;
+                //     $scope.cashPay = false;
+                //     $scope.cashPayConf = false;
+                //     $scope.cardPay = false;
+
+                // }
             }
         }
 
@@ -367,7 +370,7 @@
 
 
             $http.put($scope.baseUrl + 'cards/' + id + '/', modified).then(function (result) {
-                var text = 'Current Account Balance Is ' + reload + '.00 LKR';
+                var text = 'Current Account Balance Is ' + toatalAmount + '.00 LKR';
                 // swal({
                 //     type: 'success',
                 //     title: "Transcation Compleate",
@@ -375,11 +378,30 @@
                 //     timer: 3000,
                 //     showConfirmButton: false
                 // });
-                $scope.loadedCard.balance=toatalAmount;
-                    
-                specialAccess = true;
-                $scope.NObuttonStatus = true;
-                $scope.backtoHome();
+
+
+
+                swal({
+                    title: "Transaction in process",
+                    text: "Do you need continue",
+                    type: "info",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true
+                }, function () {
+                    setTimeout(function () {
+                        swal("Transaction Compleated!", text, "success");
+                        $scope.$apply(function () {
+                            $scope.loadedCard.balance = toatalAmount;
+                            specialAccess = true;
+                            $scope.NObuttonStatus = true;
+                            $scope.backtoHome();
+                        });
+
+                    }, 3000);
+                });
+
+
             });
 
 
@@ -391,17 +413,35 @@
         }
 
         $scope.endtranscation = function () {
-            var End = confirm("Do you need to end the transaction");
-            if (End) {
-                // swal({
-                //     type: 'success',
-                //     title: "Have a nice day",
-                //     text: "Make sure you get your card back",
-                //     timer: 3000,
-                //     showConfirmButton: false
-                // });
-                $window.location.href = 'file:///C:/Users/Kasun/Documents/CSSE2/CSSE-2/TopUpApp/Poject_Implimentation/cardInput_Page.html';
-            }
+            // var End = confirm("Do you need to end the transaction");
+            // if (End) {
+            //     // swal({
+            //     //     type: 'success',
+            //     //     title: "Have a nice day",
+            //     //     text: "Make sure you get your card back",
+            //     //     timer: 3000,
+            //     //     showConfirmButton: false
+            //     // });
+            //     $window.location.href = 'file:///C:/Users/Kasun/Documents/CSSE2/CSSE-2/TopUpApp/Poject_Implimentation/cardInput_Page.html';
+            // }
+            swal({
+                    title: "Do you need to end the transaction",
+                    text: "",
+                    type: "info",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true
+                }, function () {
+                    setTimeout(function () {
+                        swal("Have a nice day.","Bring your card back");
+                        $scope.$apply(function () {
+                            setTimeout(() => {
+                                $window.location.href = 'file:///C:/Users/Kasun/Documents/CSSE2/CSSE-2/TopUpApp/Poject_Implimentation/cardInput_Page.html';
+                            }, 2000);      
+                        });
+
+                    }, 3000);
+                });
 
         }
 
@@ -431,7 +471,6 @@
         height: 100%;
     } */
 
-    .form-control,
     .col-form-label {
         font-family: 'Noto Sans', sans-serif;
         font-size: 2.5vh;
@@ -444,7 +483,7 @@
 
     .bigButton {
         width: 30%;
-        padding: 20% 5%;
+        padding: 24.5% 0%;
         font-family: 'Dosis', sans-serif;
         font-size: 5vh;
     }
@@ -507,17 +546,17 @@
 
     .ops_body {
         margin-top: 5%;
-        margin-left: 22%;
+        text-align: center;
     }
 
     .ops_body_cashConf {
-        margin-top: 10%;
-        margin-left: 22%;
+        margin-top: 15%;
+        text-align: center;
     }
 
     .ops_body_cardConf {
-        margin-top: -4%;
-        margin-left: 3%;
+        margin-top: -2%;
+        margin-left: 2%;
     }
 
     .ops_body_pay {
@@ -526,11 +565,19 @@
     }
 
     .confButton2 {
-        margin-left: 26%;
+        margin-left: 30%;
     }
 
     .ops_header {
         margin-top: -7%;
+    }
+
+    .card_body {
+        margin-top: 5%;
+        font-size: 2vh;
+    }
+    .form-group{
+        margin-bottom: 5.4%;
     }
 </style>
 
